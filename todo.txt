@@ -3,3 +3,4 @@
 ⬜ Timed game
 ⬜ End game screen
 ⬜ Advanced game settings
+⬜ Button variants
