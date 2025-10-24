@@ -1,19 +1,17 @@
 import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore"
-import { useEffect, useRef, useState, type ChangeEvent, type MouseEvent } from "react"
+import { useEffect, useRef, useState } from "react"
 import WordList from "./WordList"
-import LetterList from "./LetterList"
-import Button from "../Components/Button"
+import ProgressBar from "./ProgressBar"
+import WordInput from "./WordInput"
 import { db } from "../shared/firebase"
 import type { Game } from "../shared/types"
 import { getAllPoints, getAllWords, getUniqueLetters, isValidWord, toShuffle } from "../shared/utilities"
-import ProgressBar from "./ProgressBar"
 
 type Props = {
     gameId: string
 }
 
 export default function Play({ gameId }: Props) {
-    const [wordValue, setWordValue] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
 
     const [game, setGame] = useState<Game | null>(null)
@@ -40,24 +38,15 @@ export default function Play({ gameId }: Props) {
         return () => unsubscribe()
     }, [gameLoaded])
 
-    const handleShuffle = (event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
+    const handleShuffle = () => {
         setLetters(toShuffle(letters))
     }
 
-    const handleLetterClick = (letter: string) => {
-        setWordValue(wordValue + letter)
+    const clearError = () => {
         setErrorMessage("")
     }
 
-    const handleWordChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setWordValue(event.target.value.toLowerCase())
-        setErrorMessage("")
-    }
-
-    const addWord = async (event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
-
+    const addWord = async (wordValue: string) => {
         if (!game) return
 
         // Is it a duplicate
@@ -82,37 +71,30 @@ export default function Play({ gameId }: Props) {
                 words: arrayUnion(wordValue)
             })
         }
-
-        // Clear the textbox
-        setWordValue("")
     }
 
     return (
-        <div className="mx-auto max-w-120">
-            <h1 className="text-3xl text-center my-4">🐝Spelling Blitz</h1>
-            <p>Game Code: {gameId.toUpperCase()}</p>
-            {!gameLoaded ? <div>Loading...</div> :
+        <div className="mx-auto max-w-120 p-3">
+            <h1 className="text-3xl text-center mt-4 mb-3">🐝Spelling Blitz</h1>
+            <div className="flex justify-between">
+                <p className="text-center text-amber-700 mb-3">Game Code: {gameId.toUpperCase()}</p>
+                <p className="font-bold">3:00</p>
+            </div>
+            {!gameLoaded ?
+                <div>Loading...</div> :
                 <>
                     <ProgressBar
                         value={game && getAllPoints(game.words, letters) || 0}
                         max={allWords.current && getAllPoints(allWords.current, letters) || 100}
                         className="mb-3"
                     />
-                    <div>
-                        <LetterList letters={letters} onLetterClick={handleLetterClick} />
-                    </div>
-                    <form className="flex gap-3 my-4">
-                        <input
-                            type="text"
-                            className="border border-gray-500 bg-amber-50 rounded-lg p-3 flex-1 uppercase"
-                            value={wordValue}
-                            onChange={handleWordChange}
-                            autoFocus={true}
-                        />
-                        <Button onClick={addWord}>Enter</Button>
-                        <Button onClick={handleShuffle}>Shuffle</Button>
-                    </form>
-                    <p className="min-h-8">{errorMessage}</p>
+                    <WordInput
+                        letters={letters}
+                        onEnter={addWord}
+                        onShuffle={handleShuffle}
+                        clearError={clearError}
+                    />
+                    <p className="min-h-8 mt-2">{errorMessage}</p>
                     {game && <WordList words={game.words} letters={letters} />}
                 </>
             }
