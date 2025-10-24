@@ -1,0 +1,5 @@
+⬜ Allow sorting word list alphabetically or by recency (fa-arrow-down-a-z and fa-arrow-down-1-9)
+⬜ Pick player name
+⬜ Timed game
+⬜ End game screen
+⬜ Advanced game settings
