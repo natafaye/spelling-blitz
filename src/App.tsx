@@ -2,9 +2,7 @@ import { useState } from "react";
 import Join from "./Join/Join";
 import Play from "./Play/Play";
 
-type Props = {}
-
-export default function App({ }: Props) {
+export default function App() {
   const [gameId, setGameId] = useState<null | string>(null)
 
   const startGame = (id: string) => {
