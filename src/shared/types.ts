@@ -4,4 +4,7 @@ export type Game = {
     createdAt: Timestamp,
     words: string[]
     pangram: string
+    obscurityLevel: number
+    numLetters: number
+    minLength: number
 }

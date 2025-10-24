@@ -1,8 +1,8 @@
 import { useState, type ChangeEvent, type MouseEvent } from "react";
 import { serverTimestamp, setDoc, doc, getDoc } from "firebase/firestore"
-import Button from "./Button";
-import { getRandomWord } from "./getRandomWord";
-import { db } from "./firebase-config"
+import Button from "../Components/Button";
+import { getRandomWord } from "../shared/utilities";
+import { db } from "../shared/firebase"
 
 const MAX_ATTEMPTS = 5
 
@@ -26,16 +26,22 @@ export default function Join({ onJoin }: Props) {
     const createGame = async () => {
         setCreateThinking(true)
 
+        const obscurityLevel = 10000;
+        const numLetters = 7;
+
         // Make new game
         const newGame = {
             count: 0,
-            pangram: getRandomWord(),
             words: [],
+            pangram: getRandomWord(obscurityLevel, numLetters),
+            obscurityLevel,
+            numLetters,
+            minLength: 4,
             createdAt: serverTimestamp()
         }
 
         // Try to generate a unique id
-        let id = getRandomWord()
+        let id = getRandomWord(1000)
         let attempts = 1
         while (await existsGameWithId(id) && attempts < MAX_ATTEMPTS) {
             id = getRandomWord()

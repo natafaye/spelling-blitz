@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Join from "./Join";
-import Play from "./play/Play";
+import Join from "./Join/Join";
+import Play from "./Play/Play";
 
 type Props = {}
 

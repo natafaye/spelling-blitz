@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
 body {
-  background-color: var(--color-amber-200)
+  background-color: var(--color-amber-200);
+  font-family: 'Red Hat Text', sans-serif;
 }

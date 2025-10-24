@@ -1,4 +1,4 @@
-import Button from "../Button"
+import Button from "../Components/Button"
 
 type Props = {
   letters: string[]
@@ -7,11 +7,11 @@ type Props = {
 
 export default function LetterList({ letters, onLetterClick }: Props) {
   return (
-    <div className="flex flex-row gap-2">
-      {letters.map((letter, index) =>
+    <div className="flex flex-row gap-1">
+      {letters.map(letter =>
         <Button
-          key={index}
-          className="uppercase text-3xl p-4"
+          key={letter}
+          className="uppercase text-2xl p-4 flex-1 basis-0"
           onClick={() => onLetterClick(letter)}
         >
           {letter}
