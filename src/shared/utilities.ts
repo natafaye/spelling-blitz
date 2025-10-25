@@ -107,11 +107,15 @@ const POINTS_BY_LENGTH: { [index: number]: number } = {
   6: 3,
   7: 5,
   8: 11,
+  9: 11,
+  10: 12,
+  11: 12,
+  12: 13
 };
 const PANGRAM_POINTS = 7;
 
 export const getPoints = (word: string, letters: string[]) => {
-  let points = POINTS_BY_LENGTH[word.length];
+  let points = word.length < 13 ? POINTS_BY_LENGTH[word.length] : word.length;
   if (letters.every((l) => word.includes(l))) points += PANGRAM_POINTS;
   return points;
 };

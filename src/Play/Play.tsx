@@ -94,7 +94,7 @@ export default function Play({ gameId }: Props) {
                         onShuffle={handleShuffle}
                         clearError={clearError}
                     />
-                    <p className="min-h-8 mt-2">{errorMessage}</p>
+                    <p className="min-h-8 mt-2 text-amber-700">{errorMessage}</p>
                     {game && <WordList words={game.words} letters={letters} />}
                 </>
             }
