@@ -65,8 +65,9 @@ export default function CreateForm({ onJoin }: Props) {
         <div className="w-full">
             <div className="flex flex-row gap-2 pb-3">
                 <input type="range"
-                    min="10000"
-                    max="200000"
+                    min="1000"
+                    max="180000"
+                    step="1000"
                     className="flex-1"
                     value={obscurityValue}
                     onChange={(e) => setObscurityValue(e.target.value)}
