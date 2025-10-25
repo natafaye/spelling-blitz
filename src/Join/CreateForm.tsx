@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import Button from "../Components/Button"
 import { getRandomWord } from "../shared/utilities"
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore"
 import { db } from "../shared/firebase"
-import { words } from "popular-english-words"
+import { wordlist } from "../shared/wordlist"
 
 type Props = {
     onJoin: (id: string) => void
@@ -14,9 +14,13 @@ const MAX_ATTEMPTS = 5
 export default function CreateForm({ onJoin }: Props) {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<null | string>(null)
-    const [obscurityValue, setObscurityValue] = useState("20000")
+    const [obscurityValue, setObscurityValue] = useState("18000")
+    const [minWordLengthValue, setMinWordLengthValue] = useState("4")
 
-    const mostObscureWord = words.getWordAtPosition(parseInt(obscurityValue))
+    const mostObscureWords = [
+        wordlist[parseInt(obscurityValue) - 1],
+        wordlist[parseInt(obscurityValue)]
+    ]
 
     const existsGameWithId = async (id: string) => {
         const docSnapshot = await getDoc(doc(db, "games", id))
@@ -36,7 +40,7 @@ export default function CreateForm({ onJoin }: Props) {
             pangram: getRandomWord(obscurityLevel, numLetters),
             obscurityLevel,
             numLetters,
-            minLength: 4,
+            minLength: parseInt(minWordLengthValue),
             createdAt: serverTimestamp()
         }
 
@@ -63,16 +67,43 @@ export default function CreateForm({ onJoin }: Props) {
 
     return (
         <div className="w-full">
-            <div className="flex flex-row gap-2 pb-3">
-                <input type="range"
-                    min="1000"
-                    max="180000"
-                    step="1000"
-                    className="flex-1"
-                    value={obscurityValue}
-                    onChange={(e) => setObscurityValue(e.target.value)}
-                />
-                <p className="w-20">{mostObscureWord}</p>
+            <div>
+                <label htmlFor="obscurity-range" className="text-lg">Obscurity</label>
+                <div className="flex flex-row gap-2 pb-3 items-center">
+                    <p className="w-15">
+                        {obscurityValue}
+                    </p>
+                    <input
+                        type="range"
+                        id="obscurity-range"
+                        className="flex-1 accent-amber-800"
+                        min={800}
+                        max={wordlist.length - 1}
+                        step={100}
+                        value={obscurityValue}
+                        onChange={(e) => setObscurityValue(e.target.value)}
+                    />
+                    <p className="w-20">
+                        {mostObscureWords.map(word => <Fragment key={word}>{word}<br /></Fragment>)}
+                    </p>
+                </div>
+            </div>
+            <div>
+                <label htmlFor="word-length-range" className="text-lg">Minimum Word Length</label>
+                <div className="flex flex-row gap-2 pb-3 items-center">
+                    <p className="w-4 text-amber-800 font-bold">
+                        {minWordLengthValue}
+                    </p>
+                    <input
+                        type="range"
+                        id="word-length-range"
+                        className="flex-1 accent-amber-800"
+                        min={2} 
+                        max={6}
+                        value={minWordLengthValue}
+                        onChange={(e) => setMinWordLengthValue(e.target.value)}
+                    />
+                </div>
             </div>
             <Button
                 className="w-full text-2xl"

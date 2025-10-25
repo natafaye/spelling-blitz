@@ -1,5 +1,4 @@
-import { words } from "popular-english-words";
-import { blacklist } from "./wordblacklist";
+import { wordlist } from "./wordlist";
 
 /**
  * Gets a random word
@@ -12,20 +11,15 @@ export const getRandomWord = (
   obscurityLevel: number = 10000,
   numberOfLetters: number = 0
 ) => {
-  if (obscurityLevel > words.getWordCount()) return "ERROR";
+  if (obscurityLevel > wordlist.length) return "ERROR";
   if (numberOfLetters === 0)
-    return words.getWordAtPosition(
-      Math.floor(Math.random() * obscurityLevel)
-    ) as string;
+    return wordlist[Math.floor(Math.random() * obscurityLevel)];
   else {
-    const possiblities = words
-      .getMostPopular(obscurityLevel)
-      .filter(
-        (word) =>
-          words.getWordRank(word) <= obscurityLevel &&
-          !blacklist.includes(word) &&
-          getUniqueLetters(word).length === numberOfLetters
-      );
+    const possiblities = wordlist.filter(
+      (word, index) =>
+        index <= obscurityLevel &&
+        getUniqueLetters(word).length === numberOfLetters
+    );
     return possiblities[Math.floor(Math.random() * possiblities.length)];
   }
 };
@@ -43,15 +37,12 @@ export const getAllWords = (
   obscurityLevel: number,
   minLength: number
 ) =>
-  words
-    .getMostPopular(obscurityLevel)
-    .filter(
-      (word) =>
-        words.getWordRank(word) <= obscurityLevel &&
-        word.length >= minLength &&
-        !blacklist.includes(word) &&
-        word.split("").every((l) => letters.includes(l))
-    );
+  wordlist.filter(
+    (word, index) =>
+      index <= obscurityLevel &&
+      word.length >= minLength &&
+      word.split("").every((l) => letters.includes(l))
+  );
 
 /**
  * Get the unique letters in a word
@@ -69,8 +60,8 @@ export const getUniqueLetters = (word: string) =>
  * @returns whether or not the word appears in the list
  */
 export const isValidWord = (word: string, obscurityLevel: number) => {
-  const rank = words.getWordRank(word);
-  return rank !== -1 && rank <= obscurityLevel && !blacklist.includes(word);
+  const rank = wordlist.indexOf(word);
+  return rank !== -1 && rank <= obscurityLevel;
 };
 
 /**
@@ -110,7 +101,7 @@ const POINTS_BY_LENGTH: { [index: number]: number } = {
   9: 11,
   10: 12,
   11: 12,
-  12: 13
+  12: 13,
 };
 const PANGRAM_POINTS = 7;
 
