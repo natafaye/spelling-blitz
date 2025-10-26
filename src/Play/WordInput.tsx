@@ -6,12 +6,13 @@ import { faDeleteLeft, faShuffle } from "@fortawesome/free-solid-svg-icons"
 
 type Props = {
     letters: string[]
+    className?: string
     onEnter: (word: string) => void
     onShuffle: () => void
     clearError: () => void
 }
 
-export default function WordInput({ letters, onEnter, onShuffle, clearError }: Props) {
+export default function WordInput({ letters, className, onEnter, onShuffle, clearError }: Props) {
     const [wordValue, setWordValue] = useState("")
 
     const handleDelete = () => {
@@ -35,7 +36,7 @@ export default function WordInput({ letters, onEnter, onShuffle, clearError }: P
     }
 
     return (
-        <>
+        <div className={className}>
             <LetterList
                 letters={letters}
                 onLetterClick={handleLetterClick}
@@ -52,6 +53,6 @@ export default function WordInput({ letters, onEnter, onShuffle, clearError }: P
                 <Button onClick={handleDelete} type="button"><FontAwesomeIcon icon={faDeleteLeft} size="lg"/></Button>
                 <Button onClick={onShuffle} type="button"><FontAwesomeIcon icon={faShuffle}/></Button>
             </form>
-        </>
+        </div>
     )
 }

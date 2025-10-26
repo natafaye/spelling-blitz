@@ -2,5 +2,6 @@
 ⬜ Pick player name
 ⬜ Timed game
 ⬜ End game screen
-⬜ Advanced game settings
 ⬜ Button variants
+⬜ Save in local storage
+⬜ More firestore error handling

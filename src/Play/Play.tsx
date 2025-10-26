@@ -1,50 +1,26 @@
-import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore"
-import { useEffect, useRef, useState } from "react"
+import { arrayUnion, doc, updateDoc } from "firebase/firestore"
+import { useState } from "react"
 import WordList from "./WordList"
-import ProgressBar from "./ProgressBar"
+import ProgressBar from "../Components/ProgressBar"
 import WordInput from "./WordInput"
-import { db } from "../shared/firebase"
+import { getAllPoints, isValidWord, toShuffle } from "../shared/utilities"
 import type { Game } from "../shared/types"
-import { getAllPoints, getAllWords, getUniqueLetters, isValidWord, toShuffle } from "../shared/utilities"
+import { db } from "../shared/firebase"
 
 type Props = {
     gameId: string
+    game: Game
+    playerName: string
 }
 
-export default function Play({ gameId }: Props) {
+export default function Play({ gameId, game }: Props) {
+    const [letters, setLetters] = useState<string[]>(game.letters)
     const [errorMessage, setErrorMessage] = useState("")
 
-    const [game, setGame] = useState<Game | null>(null)
-    const [gameLoaded, setGameLoaded] = useState(false)
-    const [letters, setLetters] = useState<string[]>([])
-    const allWords = useRef<string[]>(null)
-    const maxPoints = useRef<number>(null)
+    const handleShuffle = () => setLetters(toShuffle(letters))
+    const clearError = () => setErrorMessage("")
 
     const gameRef = doc(db, "games", gameId)
-
-    useEffect(() => {
-        const unsubscribe = onSnapshot(gameRef, (docSnapshot) => {
-            if (!docSnapshot.exists()) return
-            const game = docSnapshot.data() as Game
-            setGame(game)
-            if (!gameLoaded) {
-                const letters = getUniqueLetters(game.pangram)
-                setLetters(toShuffle(letters))
-                allWords.current = getAllWords(letters, game.obscurityLevel, game.minLength)
-                maxPoints.current = getAllPoints(allWords.current, letters)
-                setGameLoaded(true)
-            }
-        })
-        return () => unsubscribe()
-    }, [gameLoaded])
-
-    const handleShuffle = () => {
-        setLetters(toShuffle(letters))
-    }
-
-    const clearError = () => {
-        setErrorMessage("")
-    }
 
     const addWord = async (wordValue: string) => {
         if (!game) return
@@ -74,30 +50,31 @@ export default function Play({ gameId }: Props) {
     }
 
     return (
-        <div className="mx-auto max-w-120 p-3">
-            <h1 className="text-3xl text-center mt-4 mb-3">🐝Spelling Blitz</h1>
-            <div className="flex justify-between">
-                <p className="text-center text-amber-700 mb-3">Game Code: {gameId.toUpperCase()}</p>
-                <p className="font-bold">3:00</p>
+        <>
+            <h1 className="text-3xl text-center mt-1 mb-3">🐝Spelling Blitz</h1>
+            <div className="flex justify-between items-center mb-2">
+                <p className="text-amber-700">Game Code: {gameId.toUpperCase()}</p>
+                <p className="font-bold text-lg">3:00</p>
             </div>
-            {!gameLoaded ?
-                <div>Loading...</div> :
-                <>
-                    <ProgressBar
-                        value={game && getAllPoints(game.words, letters) || 0}
-                        max={allWords.current && getAllPoints(allWords.current, letters) || 100}
-                        className="mb-3"
-                    />
-                    <WordInput
-                        letters={letters}
-                        onEnter={addWord}
-                        onShuffle={handleShuffle}
-                        clearError={clearError}
-                    />
-                    <p className="min-h-8 mt-2 text-amber-700">{errorMessage}</p>
-                    {game && <WordList words={game.words} letters={letters} />}
-                </>
-            }
-        </div>
+            <ProgressBar
+                value={getAllPoints(game.words, letters)}
+                max={game.maxPoints}
+                className="mb-4"
+            />
+            <WordList
+                words={game.words}
+                letters={letters}
+                className="overflow-y-auto shrink grow min-h-0 mb-4"
+            />
+            <WordInput
+                letters={letters}
+                onEnter={addWord}
+                onShuffle={handleShuffle}
+                clearError={clearError}
+            />
+            <p className="min-h-8 mt-2 mb-1 text-amber-700">
+                {errorMessage}
+            </p>
+        </>
     )
 }

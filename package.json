@@ -16,10 +16,8 @@
     "@tailwindcss/vite": "^4.1.15",
     "clsx": "^2.1.1",
     "firebase": "^12.4.0",
-    "popular-english-words": "^1.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "scrabble-dict": "^1.0.2",
     "tailwindcss": "^4.1.15"
   },
   "devDependencies": {

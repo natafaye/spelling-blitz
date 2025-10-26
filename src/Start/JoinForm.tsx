@@ -1,7 +1,6 @@
 import { useState, type ChangeEvent, type MouseEvent } from "react"
 import Button from "../Components/Button"
-import { doc, getDoc } from "firebase/firestore"
-import { db } from "../shared/firebase"
+import { existsGameWithId } from "./existsGameWithId"
 
 type Props = {
     onJoin: (id: string) => void
@@ -12,11 +11,6 @@ export default function JoinForm({ onJoin }: Props) {
     const [idValue, setIdValue] = useState("")
     const [error, setError] = useState<null | string>(null)
 
-    const existsGameWithId = async (id: string) => {
-        const docSnapshot = await getDoc(doc(db, "games", id))
-        return docSnapshot.exists()
-    }
-
     const onJoinChange = (event: ChangeEvent<HTMLInputElement>) => {
         setIdValue(event.target.value.toLowerCase())
         setError(null)
@@ -24,33 +18,35 @@ export default function JoinForm({ onJoin }: Props) {
 
     const joinGame = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
-
+        if(idValue === "") return
+        
         setLoading(true)
-        if (!await existsGameWithId(idValue)) {
-            setError("There isn't a game with that id")
-        } else {
+        if (await existsGameWithId(idValue)) {
             onJoin(idValue)
+        } else {
+            setError("There isn't a game with that id")
         }
         setLoading(false)
     }
+
     return (
         <div>
-            <form className="flex gap-3">
+            <form className="flex">
                 <input
                     type="text"
-                    className="border border-gray-500 rounded-lg p-3 flex-1 uppercase"
+                    className="bg-amber-50 rounded-lg rounded-e-none p-3 flex-1 uppercase"
                     value={idValue}
                     onChange={onJoinChange}
                 />
                 <Button
-                    className="text-xl"
+                    className="text-xl rounded-s-none"
                     onClick={joinGame}
                     disabled={loading}
                 >
                     {loading ? "Joining..." : "Join Game"}
                 </Button>
             </form>
-            <p className="text-red-700 text-center min-h-10">{error}</p>
+            <p className="text-red-700 text-center min-h-10 mt-3">{error}</p>
         </div>
     )
 }

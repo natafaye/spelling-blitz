@@ -11,9 +11,9 @@ export default function ProgressBar({ value, max, className, ...props }: Props) 
     return (
         <div className={clsx(className, "bg-amber-50 rounded-lg text-amber-800 flex flex-row gap-3 items-center")} {...props}>
             <div className="bg-amber-400 h-10 rounded-lg text-white flex items-center justify-end" style={{ width: percentage + "%" }}>
-                { percentage > 20 && <span className="me-3">{value} / {max}</span>}
+                { percentage > 50 && <span className="me-3">{value} / {max}</span>}
             </div>
-            { percentage <= 20 && <span>{value} / {max}</span>}
+            { percentage <= 50 && <span>{value} / {max}</span>}
         </div>
     )
 }

@@ -1,20 +1,11 @@
-import { useState } from "react";
-import Join from "./Join/Join";
-import Play from "./Play/Play";
+import Game from "./Game";
 
 export default function App() {
-  const [gameId, setGameId] = useState<null | string>(null)
-
-  const startGame = (id: string) => {
-    setGameId(id)
-  }
-
   return (
-    <div>
-      {gameId ?
-        <Play gameId={gameId}/> :
-        <Join onJoin={startGame} />
-      }
+    <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center p-4">
+      <div className="w-full max-w-100 h-full flex flex-col overflow-hidden">
+        <Game />
+      </div>
     </div>
   )
 }
