@@ -8,23 +8,20 @@ import { getAllPoints, getAllWords, getRandomWord, getUniqueLetters, toShuffle }
 import { db } from "../shared/firebase"
 import { wordlist } from "../shared/wordlist"
 import { existsGameWithId } from "./existsGameWithId"
+import { DEFAULT_MIN_WORD_LENGTH, DEFAULT_NUMBER_OF_LETTERS, DEFAULT_OBSCURITY, MAX_GAME_ID_ATTEMPTS } from "../shared/constants"
 
 type Props = {
     onJoin: (id: string) => void
+    playerId: string
 }
 
-const MAX_ATTEMPTS = 5
-const DEFAULT_OBSCURITY = "40000"
-const DEFAULT_MIN_WORD_LENGTH = "4"
-const DEFAULT_NUMBER_OF_LETTERS = "7"
-
-export default function CreateForm({ onJoin }: Props) {
+export default function CreateForm({ onJoin, playerId }: Props) {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<null | string>(null)
     const [showSettings, setShowSettings] = useState(false)
-    const [obscurityValue, setObscurityValue] = useState(DEFAULT_OBSCURITY)
-    const [minWordLengthValue, setMinWordLengthValue] = useState(DEFAULT_MIN_WORD_LENGTH)
-    const [numberOfLettersValue, setNumberOfLettersValue] = useState(DEFAULT_NUMBER_OF_LETTERS)
+    const [obscurityValue, setObscurityValue] = useState(DEFAULT_OBSCURITY.toString())
+    const [minWordLengthValue, setMinWordLengthValue] = useState(DEFAULT_MIN_WORD_LENGTH.toString())
+    const [numberOfLettersValue, setNumberOfLettersValue] = useState(DEFAULT_NUMBER_OF_LETTERS.toString())
 
     const mostObscureWords = useMemo(
         () => wordlist.slice(parseInt(obscurityValue) - 5, parseInt(obscurityValue) + 5),
@@ -51,20 +48,23 @@ export default function CreateForm({ onJoin }: Props) {
             letters,
             allWords,
             maxPoints,
-            words: [],
+            words: {},
             players: {},
+            hostPlayerId: playerId,
             createdAt: serverTimestamp(),
             startedAt: null
         }
 
-        // Try to generate a unique id
+        // Try to generate a unique word id
+        // Allow a certain number of attempts to get an id that hasn't already been taken
+        // It seems highly unlikely that the word will be already taken, but not impossible
         let id = getRandomWord(1000)
         let attempts = 1
-        while (await existsGameWithId(id) && attempts < MAX_ATTEMPTS) {
+        while (await existsGameWithId(id) && attempts < MAX_GAME_ID_ATTEMPTS) {
             id = getRandomWord()
             attempts++
         }
-        if (attempts >= MAX_ATTEMPTS) {
+        if (attempts >= MAX_GAME_ID_ATTEMPTS) {
             setError("Couldn't get a unique game id, try again")
             setLoading(false)
             return

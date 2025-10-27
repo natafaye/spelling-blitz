@@ -2,15 +2,17 @@ import clsx from "clsx"
 import type { ButtonHTMLAttributes } from "react"
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: "default" | "danger"
+    variant?: "default" | "danger" | "success"
 }
 export default function Button({ variant = "default", className, children, ...props }: Props) {
     return (
         <button
             className={clsx(
                 className, 
-                "bg-amber-700 text-white p-3 rounded-lg", 
-                "hover:bg-yellow-600"
+                "text-white p-3 rounded-lg", 
+                variant === "default" && "bg-amber-700 hover:bg-yellow-600",
+                variant === "danger" && "bg-neutral-600 hover:bg-neutral-500",
+                variant === "success" && "bg-emerald-700 hover:bg-emerald-600"
             )}
             {...props}
         >

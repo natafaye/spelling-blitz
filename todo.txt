@@ -1,7 +1,6 @@
 ⬜ Allow sorting word list alphabetically or by recency (fa-arrow-down-a-z and fa-arrow-down-1-9)
-⬜ Timed game
-⬜ End game screen
 ⬜ Button variants
-⬜ Save in local storage
 ⬜ More firestore error handling
 ⬜ Kick players if you're the host
+⬜ Confirm leave game for host because it will delete game
+⬜ Quick join of previous games

@@ -13,8 +13,13 @@ export type Game = {
   letters: string[];
   allWords: string[];
   maxPoints: number;
-  words: string[];
-  players: { [index: string]: Player };
+  words: {
+    [index: string]: string[];
+  };
+  hostPlayerId: string;
+  players: {
+    [index: string]: Player;
+  };
   createdAt: Timestamp;
   startedAt: Timestamp | null;
 };

@@ -2,15 +2,16 @@ import CreateForm from "./CreateForm";
 import JoinForm from "./JoinForm";
 
 type Props = {
+    playerId: string
     onJoin: (id: string) => void
 }
 
-export default function Start({ onJoin }: Props) {
+export default function Start({ playerId, onJoin }: Props) {
 
     return (
         <div className="my-auto">
             <h1 className="text-5xl text-center mb-10">🐝Spelling Blitz</h1>
-            <CreateForm onJoin={onJoin} />
+            <CreateForm onJoin={onJoin} playerId={playerId} />
             <div className="flex items-center">
                 <hr className="flex-1" />
                 <p className="p-4 text-xl text-center">OR</p>
