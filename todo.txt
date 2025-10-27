@@ -1,3 +1,5 @@
 ⬜ Allow sorting word list alphabetically or by recency (fa-arrow-down-a-z and fa-arrow-down-1-9)
 ⬜ More firestore error handling
 ⬜ Kick players if you're the host
+⬜ Leave game at every step
+⬜ Pause
