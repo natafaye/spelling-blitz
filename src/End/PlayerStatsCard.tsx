@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faCaretRight, faCrown } from "@fortawesome/free-solid-svg-icons";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import type { PlayerStats } from "./generatePlayerStats";
-import { useState } from "react";
+import CollapsibleWordList from "./CollapsibleWordList";
 
 type Props = {
   player: PlayerStats;
@@ -20,8 +20,6 @@ export default function PlayerStatsCard({
   highestUnique,
   className,
 }: Props) {
-  const [showWords, setShowWords] = useState(false);
-
   return (
     <div className={className}>
       <h4
@@ -39,7 +37,12 @@ export default function PlayerStatsCard({
       <div className="flex gap-3 mt-2">
         <div className="flex-1">
           <h6 className="text-sm">Total Points</h6>
-          <p className={clsx("text-xl", player.totalPoints === highestTotal && "font-bold")}>
+          <p
+            className={clsx(
+              "text-xl",
+              player.totalPoints === highestTotal && "font-bold"
+            )}
+          >
             {player.totalPoints}
             {player.totalPoints === highestTotal && (
               <FontAwesomeIcon icon={faCrown} className="text-amber-500 ms-2" />
@@ -48,7 +51,12 @@ export default function PlayerStatsCard({
         </div>
         <div className="flex-1">
           <h6 className="text-sm">Unique Points</h6>
-          <p className={clsx("text-xl", player.uniquePoints === highestUnique && "font-bold")}>
+          <p
+            className={clsx(
+              "text-xl",
+              player.uniquePoints === highestUnique && "font-bold"
+            )}
+          >
             {player.uniquePoints}
             {player.uniquePoints === highestUnique && (
               <FontAwesomeIcon icon={faCrown} className="text-amber-500 ms-2" />
@@ -57,36 +65,15 @@ export default function PlayerStatsCard({
         </div>
         <div className="flex-1">
           <h6 className="text-sm">Longest Unique</h6>
-          <p className="text-xl">
-            {player.longestUniqueWord}
-          </p>
+          <p className="text-xl">{player.longestUniqueWord}</p>
         </div>
       </div>
-      <div className="mt-2">
-        <button
-          className="text-sm text-amber-800"
-          onClick={() => setShowWords(!showWords)}
-        >
-          <FontAwesomeIcon icon={showWords ? faCaretDown : faCaretRight} />
-          Unique Words
-        </button>
-        {showWords && (
-          <div className="ms-2">
-            {player.uniqueWords
-              .sort((a, b) => b.length - a.length)
-              .map((word, index) => (
-                <span
-                  className={clsx(
-                    letters.every((l) => word.includes(l)) && "font-bold"
-                  )}
-                >
-                  {word}
-                  {index !== player.uniqueWords.length - 1 && ", "}
-                </span>
-              ))}
-          </div>
-        )}
-      </div>
+      <CollapsibleWordList
+        className="mt-2 -ms-1"
+        buttonLabel="Unique Words"
+        wordList={player.uniqueWords.sort((a, b) => b.length - a.length)}
+        letters={letters}
+      />
     </div>
   );
 }

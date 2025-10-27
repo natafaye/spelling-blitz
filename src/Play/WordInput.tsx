@@ -47,7 +47,6 @@ export default function WordInput({ letters, className, onEnter, onShuffle, clea
                     className="bg-amber-50 rounded-lg p-3 rounded-e-none uppercase min-w-36 flex-1"
                     value={wordValue}
                     onChange={handleWordChange}
-                    autoFocus={true}
                 />
                 <Button onClick={handleEnter} className="rounded-s-none -ms-1">Enter</Button>
                 <Button onClick={handleDelete} type="button"><FontAwesomeIcon icon={faDeleteLeft} size="lg"/></Button>

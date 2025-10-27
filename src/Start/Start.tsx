@@ -3,10 +3,11 @@ import JoinForm from "./JoinForm";
 
 type Props = {
     playerId: string
+    gameIdHistory: string[]
     onJoin: (id: string) => void
 }
 
-export default function Start({ playerId, onJoin }: Props) {
+export default function Start({ playerId, gameIdHistory, onJoin }: Props) {
 
     return (
         <div className="my-auto">
@@ -17,7 +18,7 @@ export default function Start({ playerId, onJoin }: Props) {
                 <p className="p-4 text-xl text-center">OR</p>
                 <hr className="flex-1" />
             </div>
-            <JoinForm onJoin={onJoin} />
+            <JoinForm onJoin={onJoin} gameIdHistory={gameIdHistory} />
         </div>
     )
 }
