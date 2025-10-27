@@ -52,7 +52,7 @@ export default function CreateForm({ onJoin }: Props) {
             allWords,
             maxPoints,
             words: [],
-            players: [],
+            players: {},
             createdAt: serverTimestamp(),
             startedAt: null
         }

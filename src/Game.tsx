@@ -26,7 +26,7 @@ export default function Game() {
     if (gameError)
         return <div>{gameError}</div>
 
-    // If there's no error but no game, wait while it loads
+    // If there's a game id, but no error and no game, wait while it loads
     if (!game)
         return <div>Loading game...</div>
 
