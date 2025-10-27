@@ -31,7 +31,8 @@ export const generatePlayerStats = (game: Game) => {
       ),
       uniquePoints: getAllPoints(uniqueWords, game.letters),
       longestUniqueWord: uniqueWords.reduce(
-        (longest, word) => (word.length > longest.length ? word : longest)
+        (longest, word) => (word.length > longest.length ? word : longest),
+        ""
       ),
     };
   });

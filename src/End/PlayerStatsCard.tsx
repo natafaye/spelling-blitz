@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faCrown } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faCaretRight, faCrown } from "@fortawesome/free-solid-svg-icons";
 import type { PlayerStats } from "./generatePlayerStats";
 import { useState } from "react";
 
@@ -58,8 +58,7 @@ export default function PlayerStatsCard({
         <div className="flex-1">
           <h6 className="text-sm">Longest Unique</h6>
           <p className="text-xl">
-            {player.longestUniqueWord[0].toUpperCase() +
-              player.longestUniqueWord.slice(1)}
+            {player.longestUniqueWord}
           </p>
         </div>
       </div>
@@ -68,7 +67,7 @@ export default function PlayerStatsCard({
           className="text-sm text-amber-800"
           onClick={() => setShowWords(!showWords)}
         >
-          <FontAwesomeIcon icon={faCaretDown} />
+          <FontAwesomeIcon icon={showWords ? faCaretDown : faCaretRight} />
           Unique Words
         </button>
         {showWords && (
